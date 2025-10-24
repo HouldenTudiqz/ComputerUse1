@@ -5,16 +5,39 @@ class Planner {
    * Generates a plan of actions based on the goal and perception data.
    * @param {string} goal - The user's goal.
    * @param {object} perceptionData - The summarized page content.
-   * @returns {object} A structured plan of actions.
+   * @returns {Promise<object>} A structured plan of actions.
    */
   async createPlan(goal, perceptionData) {
     console.log('Planner: Creating a plan for goal:', goal);
-    // AI reasoning logic will go here.
-    return {
-      actions: [
-        { type: 'click', selector: '#button' },
-      ],
-    };
+
+    // If we are already on the search results page, the plan is complete.
+    if (perceptionData.url.includes('google.com/search')) {
+      return { actions: [] };
+    }
+
+    // This is a hardcoded plan for the specific goal.
+    if (goal.includes('weather in Tokyo')) {
+      return {
+        actions: [
+          {
+            type: 'navigate',
+            url: 'https://www.google.com',
+          },
+          {
+            type: 'type',
+            selector: 'textarea[name="q"]',
+            text: 'weather in Tokyo Japan',
+          },
+          {
+            type: 'click',
+            selector: 'input[name="btnK"]',
+          },
+        ],
+      };
+    }
+
+    // Default case: no plan.
+    return { actions: [] };
   }
 }
 
