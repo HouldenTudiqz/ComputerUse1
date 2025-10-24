@@ -1,0 +1,31 @@
+{
+  "name": "computeruse1",
+  "version": "1.0.0",
+  "description": "A modular AI agent for browser automation with DOM manipulation and virtual input capabilities",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "rebuild": "npm run clean && npm run build",
+    "example": "npm run build && node dist/examples/basic-usage.js"
+  },
+  "keywords": [
+    "browser-automation",
+    "ai-agent",
+    "playwright",
+    "dom-manipulation",
+    "virtual-input"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^24.9.1",
+    "playwright": "^1.56.1",
+    "puppeteer": "^24.26.1",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/puppeteer": "^5.4.7"
+  }
+}
