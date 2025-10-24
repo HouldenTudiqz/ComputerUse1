@@ -19,7 +19,6 @@ class TestOrchestrator(unittest.TestCase):
         mock_verifier = MockVerifier.return_value
 
         mock_perception.perceive.return_value = {"state": "initial"}
-        mock_planner.plan.return_value = {"action": "test_action"}
         mock_verifier.verify.return_value = True
 
         orchestrator = Orchestrator()
@@ -29,8 +28,10 @@ class TestOrchestrator(unittest.TestCase):
 
         # Assert
         mock_perception.perceive.assert_called_once()
-        mock_planner.plan.assert_called_once_with({"state": "initial"})
-        mock_navigator.execute.assert_called_once_with({"action": "test_action"})
+        mock_navigator.start_browser.assert_called_once()
+        mock_navigator.goto.assert_called_once_with("http://toscrape.com/")
+        mock_navigator.click.assert_called_once_with("a[href*='books.toscrape.com']")
+        mock_navigator.close_browser.assert_called_once()
         mock_verifier.verify.assert_called_once()
 
 if __name__ == '__main__':
