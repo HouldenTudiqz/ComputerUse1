@@ -3,11 +3,10 @@ from src.planner.planner import Planner
 from src.navigator.navigator import Navigator
 from src.verifier.verifier import Verifier
 
-
 class Orchestrator:
-    def __init__(self):
+    def __init__(self, goal):
         self.perception = Perception()
-        self.planner = Planner()
+        self.planner = Planner(goal=goal)
         self.navigator = Navigator()
         self.verifier = Verifier()
 
@@ -15,34 +14,39 @@ class Orchestrator:
         """
         Runs the main loop of the AI-Assisted Browser.
         """
-        print("Starting the Orchestrator loop...")
+        print(f"Starting the Orchestrator loop with goal: {self.planner.goal}")
         self.navigator.start_browser()
 
         try:
+            # Start at a known URL
+            self.navigator.goto("http://toscrape.com/")
+
             # 1. Perceive
-            current_state = self.perception.perceive()
+            current_state = self.perception.perceive(self.navigator.page)
+            print(f"Perceived {len(current_state['elements'])} elements.")
 
             # 2. Plan
-            # For now, we'll use a hardcoded plan.
-            # In the future, this will come from the planner.
-            action_plan = [
-                {"action": "goto", "url": "http://toscrape.com/"},
-                {"action": "click", "selector": "a[href*='books.toscrape.com']"}
-            ]
+            action_plan = self.planner.plan(current_state)
+            print(f"Planner generated a plan with {len(action_plan)} steps.")
 
             # 3. Execute
-            for action in action_plan:
-                if action["action"] == "goto":
-                    self.navigator.goto(action["url"])
-                elif action["action"] == "click":
-                    self.navigator.click(action["selector"])
+            if action_plan:
+                for action in action_plan:
+                    if action["action"] == "click":
+                        self.navigator.click(action["selector"])
 
-            # 4. Verify
-            success = self.verifier.verify(current_state)
+                # After executing the plan, perceive the new state
+                final_state = self.perception.perceive(self.navigator.page)
 
-            if success:
-                print("Orchestrator loop finished successfully.")
+                # 4. Verify
+                success = self.verifier.verify(final_state)
+
+                if success:
+                    print("Orchestrator loop finished successfully.")
+                else:
+                    print("Orchestrator loop finished with verification failure.")
             else:
-                print("Orchestrator loop finished with verification failure.")
+                print("Planner did not generate a plan. Nothing to execute.")
+
         finally:
             self.navigator.close_browser()

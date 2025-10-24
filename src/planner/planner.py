@@ -1,4 +1,18 @@
 class Planner:
-    def plan(self, state):
-        print(f"Planning next action based on state: {state}")
-        return {"action": "click", "selector": "#button"}
+    def __init__(self, goal):
+        self.goal = goal
+
+    def plan(self, perceived_state):
+        """
+        Generates a plan of action based on the perceived state and a goal.
+        """
+        if not perceived_state or not perceived_state["elements"]:
+            return []
+
+        # Simple rule-based planner: find the first link that matches the goal.
+        for element in perceived_state["elements"]:
+            if element["type"] == "link" and self.goal in element["text"]:
+                return [{"action": "click", "selector": f"a[href='{element['href']}']"}]
+
+        # If no matching link is found, the plan is empty.
+        return []
