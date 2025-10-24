@@ -180,3 +180,35 @@ node dist/examples/basic-usage.js
 ## License
 
 ISC
+
+## Documentation
+
+- **[Quick Start Guide](QUICKSTART.md)** - Get started in minutes
+- **[API Reference](API.md)** - Complete API documentation
+- **[Architecture](ARCHITECTURE.md)** - Design and architecture overview
+
+## Project Structure
+
+```
+ComputerUse1/
+├── src/
+│   ├── agent/          # Main orchestration
+│   ├── browser/        # Browser management
+│   ├── dom/            # DOM manipulation
+│   ├── input/          # Virtual keyboard/mouse
+│   ├── parser/         # Task parsing
+│   └── index.ts        # Main exports
+├── examples/           # Usage examples
+├── API.md             # API documentation
+├── ARCHITECTURE.md    # Architecture guide
+├── QUICKSTART.md      # Quick start guide
+└── README.md          # This file
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+ISC
