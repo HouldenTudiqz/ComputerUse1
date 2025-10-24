@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import urllib.parse
 
 class Perception:
     def perceive(self, page):
@@ -16,7 +17,8 @@ class Perception:
                 interactable_elements.append({
                     "type": "link",
                     "text": link.get_text(strip=True),
-                    "href": link['href']
+                    "href": urllib.parse.urljoin(page.url, link['href']),
+                    "selector": self._get_selector(link)
                 })
 
             # Extract buttons
@@ -53,8 +55,10 @@ class Perception:
         """
         if tag.get('id'):
             return f"#{tag.get('id')}"
+        if tag.get('data-testid'):
+            return f"[data-testid='{tag.get('data-testid')}']"
 
-        # Fallback to a less specific selector if no ID is available
+        # Fallback to a less specific selector
         selector = tag.name
         if tag.get('class'):
             selector += '.' + '.'.join(tag.get('class'))

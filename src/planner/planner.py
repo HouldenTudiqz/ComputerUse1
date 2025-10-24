@@ -12,7 +12,7 @@ class Planner:
         # Simple rule-based planner: find the first link that matches the goal.
         for element in perceived_state["elements"]:
             if element["type"] == "link" and self.goal in element["text"]:
-                return [{"action": "click", "selector": f"a[href='{element['href']}']"}]
+                return [{"action": "click", "selector": element["selector"]}]
 
         # If no matching link is found, the plan is empty.
         return []

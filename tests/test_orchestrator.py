@@ -18,8 +18,11 @@ class TestOrchestrator(unittest.TestCase):
         mock_navigator = MockNavigator.return_value
         mock_verifier = MockVerifier.return_value
 
-        mock_perception.perceive.return_value = {"elements": [{"type": "link", "text": "Goal", "href": "/goal"}]}
-        mock_planner.plan.return_value = [{"action": "click", "selector": "a[href='/goal']"}]
+        mock_page = MagicMock()
+        mock_navigator.page = mock_page
+
+        mock_perception.perceive.return_value = {"elements": [{"type": "link", "text": "Goal", "href": "/goal", "selector": "#goal-link"}]}
+        mock_planner.plan.return_value = [{"action": "click", "selector": "#goal-link"}]
         mock_verifier.verify.return_value = True
 
         orchestrator = Orchestrator(goal="Goal")
@@ -29,10 +32,11 @@ class TestOrchestrator(unittest.TestCase):
 
         # Assert
         mock_navigator.start_browser.assert_called_once()
-        mock_navigator.goto.assert_called_once_with("http://toscrape.com/")
+        mock_navigator.goto.assert_called_once_with("http://books.toscrape.com/")
+        self.assertEqual(mock_page.wait_for_load_state.call_count, 2)
         self.assertEqual(mock_perception.perceive.call_count, 2)
         mock_planner.plan.assert_called_once()
-        mock_navigator.click.assert_called_once_with("a[href='/goal']")
+        mock_navigator.click.assert_called_once_with("#goal-link")
         mock_verifier.verify.assert_called_once()
         mock_navigator.close_browser.assert_called_once()
 

@@ -19,7 +19,10 @@ class Orchestrator:
 
         try:
             # Start at a known URL
-            self.navigator.goto("http://toscrape.com/")
+            self.navigator.goto("http://books.toscrape.com/")
+
+            # Wait for the page to be fully loaded
+            self.navigator.page.wait_for_load_state('domcontentloaded')
 
             # 1. Perceive
             current_state = self.perception.perceive(self.navigator.page)
@@ -27,13 +30,16 @@ class Orchestrator:
 
             # 2. Plan
             action_plan = self.planner.plan(current_state)
-            print(f"Planner generated a plan with {len(action_plan)} steps.")
 
             # 3. Execute
             if action_plan:
+                print(f"Planner generated a plan with {len(action_plan)} steps.")
                 for action in action_plan:
                     if action["action"] == "click":
                         self.navigator.click(action["selector"])
+
+                # Wait for the page to be fully loaded after the click
+                self.navigator.page.wait_for_load_state('domcontentloaded')
 
                 # After executing the plan, perceive the new state
                 final_state = self.perception.perceive(self.navigator.page)
