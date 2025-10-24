@@ -6,13 +6,14 @@
   "private": true,
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "webpack"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^30.2.0",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1"
   },
